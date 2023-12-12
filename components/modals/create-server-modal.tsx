@@ -4,7 +4,8 @@ import axios from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/user-modal-store";
 
 import {
   Dialog,
@@ -26,12 +27,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 
-export const InitialModal = () => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+export const CreateServerModal = () => {
+  const { type, isOpen, onClose } = useModal();
+  const router = useRouter();
 
   const formSchema = z.object({
     name: z.string().min(1, {
@@ -54,15 +52,17 @@ export const InitialModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     axios.post("/api/server", values);
     form.reset();
-    window.location.reload();
+    router.refresh();
+    onClose();
   };
 
-  if (!isMounted) {
-    return null;
-  }
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
 
   return (
-    <Dialog open>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center">Create a new server</DialogTitle>
