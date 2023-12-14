@@ -31,6 +31,8 @@ export const CreateServerModal = () => {
   const { type, isOpen, onClose } = useModal();
   const router = useRouter();
 
+  const isModalOpen = isOpen && type === "createServer";
+
   const formSchema = z.object({
     name: z.string().min(1, {
       message: "Server name is required!",
@@ -62,7 +64,7 @@ export const CreateServerModal = () => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center">Create a new server</DialogTitle>
