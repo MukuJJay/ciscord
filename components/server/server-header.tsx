@@ -51,9 +51,12 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
             Invite People <UserPlus2 className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        <Separator className="my-1" />
+        {!isGuest && <Separator className="my-1" />}
         {isAdmin && (
-          <DropdownMenuItem className=" cursor-pointer font-semibold">
+          <DropdownMenuItem
+            className=" cursor-pointer font-semibold"
+            onClick={() => onOpen("serverSettings", { server })}
+          >
             Server Settings <Settings className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
         )}
@@ -67,7 +70,7 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
             Create Channel <Antenna className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        <Separator className="my-1" />
+        {isAdmin && <Separator className="my-1" />}
         {isGuest && (
           <DropdownMenuItem className="text-rose-600 cursor-pointer font-semibold">
             Leave Server <FolderOutput className="w-4 h-4 ml-auto" />

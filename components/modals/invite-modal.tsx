@@ -47,7 +47,7 @@ export const InviteModal = () => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center">Invite Code</DialogTitle>
