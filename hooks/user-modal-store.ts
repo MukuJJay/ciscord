@@ -1,12 +1,6 @@
+import { ModalData, ModalType } from "@/types";
 import { Server } from "@prisma/client";
 import { create } from "zustand";
-
-type ModalType = "createServer" | "invite" | "serverSettings" | "members";
-
-interface ModalData {
-  server?: Server;
-  role?: string;
-}
 
 interface ModalStore {
   type: ModalType | null;

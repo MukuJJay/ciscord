@@ -41,10 +41,10 @@ export const MembersModal = () => {
         <DialogHeader>
           <DialogTitle className="text-center">Manage Members</DialogTitle>
           <DialogDescription>
-            Number of Members : {server?.members.length}
+            Number of Members : {server?.members?.length}
           </DialogDescription>
         </DialogHeader>
-        {server?.members.map((member) => {
+        {server?.members?.map((member) => {
           const nameArr = member.profile.name.split(" ");
           const shortNameArr = [];
           for (const name of nameArr) {
@@ -80,7 +80,13 @@ export const MembersModal = () => {
                 </div>
                 {server.profileId !== member.profile.id &&
                   loadingId !== member.profile.id && (
-                    <MemberSettings member={member} role={role} />
+                    <MemberSettings
+                      member={member}
+                      role={role}
+                      setLoadingId={setLoadingId}
+                      server={server}
+                      onOpen={onOpen}
+                    />
                   )}
                 {loadingId === member.profile.id && (
                   <Loader2 className="animate-spin" />
