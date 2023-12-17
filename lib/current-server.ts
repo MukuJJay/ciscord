@@ -1,11 +1,11 @@
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 
-export const useServer = async () => {
+export const useServer = async (url: string) => {
   const profile = await currentProfile();
   if (!profile) return null;
 
-  const currentUrl = new URL(window.location.href);
+  const currentUrl = new URL(url);
   const serverId = currentUrl.pathname.split("/servers/")[1];
 
   if (!serverId) return null;

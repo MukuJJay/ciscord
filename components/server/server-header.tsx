@@ -33,7 +33,6 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
 
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = isAdmin || role === MemberRole.MODERATOR;
-  const isGuest = role !== MemberRole.ADMIN;
 
   return (
     <DropdownMenu>
@@ -51,7 +50,7 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
             Invite People <UserPlus2 className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        {!isGuest && <Separator className="my-1" />}
+        {isAdmin && <Separator className="my-1" />}
         {isAdmin && (
           <DropdownMenuItem
             className=" cursor-pointer font-semibold"
@@ -60,10 +59,10 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
             Server Settings <Settings className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        {isAdmin && (
+        {isModerator && (
           <DropdownMenuItem
             className=" cursor-pointer font-semibold"
-            onClick={() => onOpen("members", { server })}
+            onClick={() => onOpen("members", { server, role })}
           >
             Manage Members <Users2 className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
@@ -74,7 +73,7 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
           </DropdownMenuItem>
         )}
         {isAdmin && <Separator className="my-1" />}
-        {isGuest && (
+        {!isAdmin && (
           <DropdownMenuItem className="text-rose-600 cursor-pointer font-semibold">
             Leave Server <FolderOutput className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>

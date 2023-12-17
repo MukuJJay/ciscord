@@ -5,6 +5,7 @@ type ModalType = "createServer" | "invite" | "serverSettings" | "members";
 
 interface ModalData {
   server?: Server;
+  role?: string;
 }
 
 interface ModalStore {

@@ -24,7 +24,10 @@ export const MembersModal = () => {
 
   const isModalOpen = isOpen && type === "members";
 
-  const { server } = data as { server: ServerWithMembersWithProfiles };
+  const { server, role } = data as {
+    server: ServerWithMembersWithProfiles;
+    role: string;
+  };
 
   const roleIconMap = {
     GUEST: <Shield className="w-5 h-5" />,
@@ -77,7 +80,7 @@ export const MembersModal = () => {
                 </div>
                 {server.profileId !== member.profile.id &&
                   loadingId !== member.profile.id && (
-                    <MemberSettings member={member} />
+                    <MemberSettings member={member} role={role} />
                   )}
                 {loadingId === member.profile.id && (
                   <Loader2 className="animate-spin" />
