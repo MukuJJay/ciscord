@@ -85,7 +85,10 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
           </DropdownMenuItem>
         )}
         {isAdmin && (
-          <DropdownMenuItem className="text-rose-600 cursor-pointer font-semibold">
+          <DropdownMenuItem
+            className="text-rose-600 cursor-pointer font-semibold"
+            onClick={() => onOpen("deleteServer", { server })}
+          >
             Delete Server <FlameKindling className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
         )}
