@@ -23,7 +23,7 @@ import qs from "query-string";
 import axios from "axios";
 import { Dispatch } from "react";
 import { useRouter } from "next/navigation";
-import { ModalData, ModalType } from "@/types";
+import { ModalData, ModalType } from "@/hooks/user-modal-store";
 
 interface MemberSettingsProps {
   member: Member & { profile: Profile };
