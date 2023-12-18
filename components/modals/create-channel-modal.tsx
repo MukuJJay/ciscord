@@ -4,8 +4,10 @@ import axios from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useModal } from "@/hooks/user-modal-store";
+import { ChannelType } from "@prisma/client";
+import qs from "query-string";
 
 import {
   Dialog,
@@ -25,37 +27,58 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FileUpload } from "@/components/file-upload";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
-export const CreateServerModal = () => {
+export const CreateChannelModal = () => {
   const { type, isOpen, onClose } = useModal();
   const router = useRouter();
+  const params = useParams();
 
-  const isModalOpen = isOpen && type === "createServer";
+  const isModalOpen = isOpen && type === "createChannel";
 
   const formSchema = z.object({
-    name: z.string().min(1, {
-      message: "Server name is required!",
-    }),
-    imageUrl: z.string().min(1, {
-      message: "Server Image is required!",
-    }),
+    name: z
+      .string()
+      .min(1, {
+        message: "Server name is required!",
+      })
+      .refine((name) => name !== "general", {
+        message: "'general' is a reserved channel name!",
+      }),
+    type: z.nativeEnum(ChannelType),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      imageUrl: "",
+      type: ChannelType.TEXT,
     },
   });
 
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    axios.post("/api/server", values);
-    form.reset();
-    router.refresh();
-    onClose();
+    try {
+      const url = qs.stringifyUrl({
+        url: "/api/channel",
+        query: {
+          serverId: params.serverId,
+        },
+      });
+
+      await axios.post(url, values);
+      form.reset();
+      router.refresh();
+      onClose();
+    } catch (error) {
+      console.error(error, "[CHANNEL-POST]");
+    }
   };
 
   const handleClose = () => {
@@ -67,7 +90,9 @@ export const CreateServerModal = () => {
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center">Create a new server</DialogTitle>
+          <DialogTitle className="text-center">
+            Create a new channel
+          </DialogTitle>
           {/* <DialogDescription className="!mt-3">
             Customize your server by adding a name and an image. This server
             settings can always be changed later.
@@ -76,7 +101,7 @@ export const CreateServerModal = () => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="dark:bg-zinc-900 p-4 rounded"
+            className="dark:bg-zinc-900 p-4 rounded flex flex-col gap-4"
           >
             <FormField
               control={form.control}
@@ -91,25 +116,33 @@ export const CreateServerModal = () => {
                 </FormItem>
               )}
             />
-
-            <div className="flex justify-center items-center mt-3">
-              <FormField
-                control={form.control}
-                name="imageUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <FileUpload
-                        endpoint="serverImage"
-                        onChange={field.onChange}
-                        value={field.value}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Channel Type</FormLabel>
+                  <Select
+                    disabled={isLoading}
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className=" focus:ring-0 focus:ring-offset-0">
+                      <SelectValue placeholder="Select a channel type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(ChannelType).map((elem) => {
+                        return (
+                          <SelectItem key={elem} value={elem}>
+                            {elem}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
 
             <DialogFooter className="mt-4">
               <Button

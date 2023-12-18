@@ -117,7 +117,11 @@ export const ServerSettingsModal = () => {
             </div>
 
             <DialogFooter className="mt-4">
-              <Button variant={"primary"} className="font-bold">
+              <Button
+                variant={"primary"}
+                className="font-bold"
+                disabled={isLoading}
+              >
                 Save
               </Button>
             </DialogFooter>
