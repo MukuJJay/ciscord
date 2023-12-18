@@ -1,3 +1,4 @@
+import { checkInviteCode } from "@/lib/check-inviteCode";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { redirectToSignIn } from "@clerk/nextjs";
@@ -24,18 +25,9 @@ const InvitePage = async ({ params }: { params: { inviteCode: string } }) => {
 
   if (existingServer) return redirect(`/servers/${existingServer.id}`);
 
-  const server = await db.server.update({
-    where: {
-      inviteCode,
-    },
-    data: {
-      members: {
-        create: [{ profileId: profile.id }],
-      },
-    },
-  });
+  const serverUpdated = await checkInviteCode(inviteCode, profile.id);
 
-  if (server) return redirect(`/servers/${server.id}`);
+  if (serverUpdated) return redirect(`/servers/${serverUpdated.id}`);
 
   return null;
 };
