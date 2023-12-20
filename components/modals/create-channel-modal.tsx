@@ -5,6 +5,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useModal } from "@/hooks/user-modal-store";
 import { ChannelType } from "@prisma/client";
 import qs from "query-string";
@@ -36,9 +37,11 @@ import {
 } from "@/components/ui/select";
 
 export const CreateChannelModal = () => {
-  const { type, isOpen, onClose } = useModal();
+  const { type, isOpen, onClose, data } = useModal();
   const router = useRouter();
   const params = useParams();
+
+  const { channelType } = data;
 
   const isModalOpen = isOpen && type === "createChannel";
 
@@ -58,9 +61,15 @@ export const CreateChannelModal = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: ChannelType.TEXT,
+      type: channelType || ChannelType.TEXT,
     },
   });
+
+  useEffect(() => {
+    if (channelType) {
+      form.setValue("type", channelType);
+    }
+  }, [channelType, form]);
 
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {

@@ -12,8 +12,11 @@ import {
   ShieldPlus,
   Video,
 } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { ServerHeader } from "./server-header";
 import { ServerSearch } from "./server-search";
+import { ServerChannel } from "./server-channel";
 
 interface ServerSidebarProps {
   serverId: string;
@@ -126,6 +129,35 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
     <div>
       <ServerHeader server={server} role={role} />
       <ServerSearch data={serverSearchPropData} />
+      <ScrollArea>
+        {!!textChannels.length && (
+          <ServerChannel
+            label={"Text Channels"}
+            role={role}
+            channels={textChannels}
+            channelType={ChannelType.TEXT}
+            icon={channelIconMap[ChannelType.TEXT]}
+          />
+        )}
+        {!!audioChannels.length && (
+          <ServerChannel
+            label={"Voice Channels"}
+            role={role}
+            channels={audioChannels}
+            channelType={ChannelType.AUDIO}
+            icon={channelIconMap[ChannelType.AUDIO]}
+          />
+        )}
+        {!!videoChannels.length && (
+          <ServerChannel
+            label={"Video Channels"}
+            role={role}
+            channels={videoChannels}
+            channelType={ChannelType.VIDEO}
+            icon={channelIconMap[ChannelType.VIDEO]}
+          />
+        )}
+      </ScrollArea>
     </div>
   );
 };
