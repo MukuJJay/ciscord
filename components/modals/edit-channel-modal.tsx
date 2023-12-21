@@ -36,14 +36,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const CreateChannelModal = () => {
+export const EditChannelModal = () => {
   const { type, isOpen, onClose, data } = useModal();
   const router = useRouter();
   const params = useParams();
 
-  const { channelType } = data;
+  const { channel } = data;
 
-  const isModalOpen = isOpen && type === "createChannel";
+  const isModalOpen = isOpen && type === "editChannel";
 
   const formSchema = z.object({
     name: z
@@ -64,27 +64,28 @@ export const CreateChannelModal = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: channelType || ChannelType.TEXT,
+      type: ChannelType.TEXT,
     },
   });
 
   useEffect(() => {
-    if (channelType) {
-      form.setValue("type", channelType);
+    if (channel) {
+      form.setValue("name", channel.name);
+      form.setValue("type", channel.type);
     }
-  }, [channelType, form]);
+  }, [isOpen, form]);
 
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: "/api/channel",
+        url: `/api/channel/${channel?.id}`,
         query: {
           serverId: params.serverId,
         },
       });
 
-      await axios.post(url, values);
+      await axios.patch(url, values);
       form.reset();
       router.refresh();
       onClose();
@@ -102,9 +103,7 @@ export const CreateChannelModal = () => {
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center">
-            Create a new channel
-          </DialogTitle>
+          <DialogTitle className="text-center">Edit channel</DialogTitle>
           {/* <DialogDescription className="!mt-3">
             Customize your server by adding a name and an image. This server
             settings can always be changed later.
@@ -162,7 +161,7 @@ export const CreateChannelModal = () => {
                 className="font-bold"
                 disabled={isLoading}
               >
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>

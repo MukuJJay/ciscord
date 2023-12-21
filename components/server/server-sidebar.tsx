@@ -74,9 +74,9 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
   );
 
   const channelIconMap = {
-    [ChannelType.TEXT]: <Hash className="w-4 h-4" />,
-    [ChannelType.AUDIO]: <AudioWaveform className="w-4 h-5" />,
-    [ChannelType.VIDEO]: <Video className="w-4 h-4" />,
+    [ChannelType.TEXT]: <Hash className="w-5 h-5" />,
+    [ChannelType.AUDIO]: <AudioWaveform className="w-5 h-5" />,
+    [ChannelType.VIDEO]: <Video className="w-5 h-5" />,
   };
 
   const roleIconMap = {

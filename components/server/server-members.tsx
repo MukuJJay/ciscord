@@ -48,7 +48,7 @@ export const ServerMembers = ({ members }: ServerMemberProps) => {
           </p>
 
           {moderators.map((mod) => (
-            <div className="flex items-center gap-2 px-3">
+            <div key={mod.id} className="flex items-center gap-2 px-3">
               <Avatar className="w-7 h-7">
                 <AvatarImage src={mod.profile.imageUrl} />
                 <AvatarFallback>{mod.profile.name[0]}</AvatarFallback>
@@ -69,7 +69,7 @@ export const ServerMembers = ({ members }: ServerMemberProps) => {
           </p>
 
           {guests.map((guest) => (
-            <div className="flex items-center gap-2 px-3">
+            <div key={guest.id} className="flex items-center gap-2 px-3">
               <Avatar className="w-7 h-7">
                 <AvatarImage src={guest.profile.imageUrl} />
                 <AvatarFallback>{guest.profile.name[0]}</AvatarFallback>
