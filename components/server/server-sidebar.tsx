@@ -17,6 +17,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ServerHeader } from "./server-header";
 import { ServerSearch } from "./server-search";
 import { ServerChannel } from "./server-channel";
+import { ServerMembers } from "./server-members";
 
 interface ServerSidebarProps {
   serverId: string;
@@ -54,21 +55,21 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
 
   if (!server) return redirect("/");
 
-  const role = server.members.find(
+  const role = server?.members.find(
     (member) => member.profile.id === profile.id
   )?.role;
 
-  const textChannels = server.channels.filter(
+  const textChannels = server?.channels.filter(
     (channel) => channel.type === ChannelType.TEXT
   );
-  const audioChannels = server.channels.filter(
+  const audioChannels = server?.channels.filter(
     (channel) => channel.type === ChannelType.AUDIO
   );
-  const videoChannels = server.channels.filter(
+  const videoChannels = server?.channels.filter(
     (channel) => channel.type === ChannelType.VIDEO
   );
 
-  const members = server.members.filter(
+  const members = server?.members.filter(
     (member) => member.profile.id !== profile.id
   );
 
@@ -158,6 +159,7 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
           />
         )}
       </ScrollArea>
+      {!!server?.members && <ServerMembers members={server?.members} />}
     </div>
   );
 };

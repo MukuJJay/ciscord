@@ -53,7 +53,7 @@ export const DeleteServerModal = () => {
         </DialogDescription>
         <DialogFooter>
           <div className="w-full flex justify-around">
-            <Button variant={"outline"} disabled={isLoading}>
+            <Button variant={"outline"} disabled={isLoading} onClick={onClose}>
               Cancel
             </Button>
             <Button
