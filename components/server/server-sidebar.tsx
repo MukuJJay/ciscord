@@ -21,9 +21,13 @@ import { ServerMembers } from "./server-members";
 
 interface ServerSidebarProps {
   serverId: string;
+  isMobile?: boolean;
 }
 
-export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
+export const ServerSidebar = async ({
+  serverId,
+  isMobile,
+}: ServerSidebarProps) => {
   const profile = await currentProfile();
   if (!profile) return redirect("/");
 
@@ -159,7 +163,9 @@ export const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
           />
         )}
       </ScrollArea>
-      {!!server?.members && <ServerMembers members={server?.members} />}
+      {!!server?.members && !isMobile && (
+        <ServerMembers members={server?.members} />
+      )}
     </div>
   );
 };
