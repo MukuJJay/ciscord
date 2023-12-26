@@ -42,7 +42,7 @@ export const MembersToggle = async ({ serverId }: { serverId: string }) => {
   return (
     <div>
       <Sheet>
-        <SheetTrigger className="flex items-center">
+        <SheetTrigger className="flex items-center" asChild>
           <Button variant={"outline"} size={"icon"}>
             <UsersRound className="w-6 h-6" />
           </Button>

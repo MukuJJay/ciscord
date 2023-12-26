@@ -8,7 +8,7 @@ export const NavServerSidebarToggle = ({ serverId }: { serverId: string }) => {
   return (
     <div>
       <Sheet>
-        <SheetTrigger className="flex items-center">
+        <SheetTrigger className="flex items-center" asChild>
           <Button variant={"ghost"} size={"icon"}>
             <Menu className="w-7 h-7" />
           </Button>
