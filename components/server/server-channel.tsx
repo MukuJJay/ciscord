@@ -94,7 +94,7 @@ export const ServerChannel = ({
                     <Trash
                       className="w-4 h-4 text-rose-500 "
                       onClick={(event) =>
-                        actionClick(event, "editChannel", channel)
+                        actionClick(event, "deleteChannel", channel)
                       }
                     />
                   </ActionTooltip>

@@ -39,7 +39,7 @@ export const DeleteChannelModal = () => {
       router.refresh();
       onClose();
     } catch (error) {
-      console.error("[LEAVE SERVER]", error);
+      console.error("[DELETE SERVER]", error);
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +49,7 @@ export const DeleteChannelModal = () => {
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center">Leave Server!</DialogTitle>
+          <DialogTitle className="text-center">Delete Channel!</DialogTitle>
         </DialogHeader>
         <DialogDescription className="text-center">
           Are you sure to delete? Channel{" "}
