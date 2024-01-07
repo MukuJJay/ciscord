@@ -54,8 +54,8 @@ export const ServerSearch = ({ data }: ServerSearchProps) => {
           <Search className="w-4 h-4" />
           Search
         </span>
-        <span className="flex items-center gap-1 text-zinc-400 text-xs dark:bg-zinc-900 py-1 px-2 rounded-lg bg-zinc-300">
-          <kbd>⌘</kbd>K
+        <span className="text-zinc-400 text-xs dark:bg-zinc-900 px-2 rounded-lg bg-zinc-300">
+          <kbd className="text-lg align-middle mr-1">⌘</kbd>K
         </span>
       </Button>
       <CommandDialog open={isOpen} onOpenChange={setIsOpen}>
