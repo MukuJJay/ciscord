@@ -10,7 +10,8 @@ import { useModal } from "@/hooks/user-modal-store";
 
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Plus, Smile } from "lucide-react";
+import { EmojiPicker } from "@/components/emoji-picker";
+import { Plus } from "lucide-react";
 
 interface chatInputProps {
   name: string;
@@ -46,7 +47,7 @@ export const ChatInput = ({ name, apiUrl, query, type }: chatInputProps) => {
       await axios.post(url, values);
 
       form.reset();
-      router.refresh();
+      // router.refresh();
     } catch (error) {
       console.error(error);
     }
@@ -85,9 +86,13 @@ export const ChatInput = ({ name, apiUrl, query, type }: chatInputProps) => {
                     }
                     autoFocus
                   />
-                  <button className="absolute right-0 top-[50%] translate-y-[-50%] p-2 group">
-                    <Smile className="group-hover:text-zinc-800 dark:group-hover:text-zinc-200 text-zinc-300 dark:text-zinc-500 transition" />
-                  </button>
+                  <div className="absolute right-0 top-[50%] translate-y-[-50%]">
+                    <EmojiPicker
+                      onChange={(emoji: string) =>
+                        field.onChange(`${field.value}${emoji}`)
+                      }
+                    />
+                  </div>
                 </div>
               </FormControl>
             </FormItem>
