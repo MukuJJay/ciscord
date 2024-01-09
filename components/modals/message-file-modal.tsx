@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/user-modal-store";
+import qs from "query-string";
 
 import {
   Dialog,
@@ -19,52 +20,43 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
-import { useEffect } from "react";
 
-export const ServerSettingsModal = () => {
+export const MessageFileModal = () => {
   const { type, isOpen, onClose, data } = useModal();
   const router = useRouter();
 
-  const { server } = data;
+  const { apiUrl, query } = data;
 
-  const isModalOpen = isOpen && type === "serverSettings";
+  const isModalOpen = isOpen && type === "messageFile";
 
   const formSchema = z.object({
-    name: z.string().min(1, {
-      message: "Server name is required!",
-    }),
-    imageUrl: z.string().min(1, {
-      message: "Server Image is required!",
+    fileUrl: z.string().min(1, {
+      message: "Attachment is required!",
     }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      imageUrl: "",
+      fileUrl: "",
     },
   });
 
-  useEffect(() => {
-    if (server) {
-      form.setValue("name", server.name);
-      form.setValue("imageUrl", server.imageUrl);
-    }
-  }, [server, form, isOpen]);
-
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await axios.patch(`/api/server/${server?.id}`, values);
-    form.reset();
+    const url = qs.stringifyUrl({
+      url: apiUrl || "",
+      query,
+    });
+
+    await axios.post(url, { ...values, content: values.fileUrl });
     router.refresh();
     onClose();
+    form.reset();
   };
 
   const handleClose = () => {
@@ -76,36 +68,22 @@ export const ServerSettingsModal = () => {
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center">Server Settings</DialogTitle>
+          <DialogTitle className="text-center">Add Attachment</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="dark:bg-zinc-900 p-4 rounded"
           >
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Enter server name</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={isLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <div className="flex justify-center items-center mt-3">
               <FormField
                 control={form.control}
-                name="imageUrl"
+                name="fileUrl"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
                       <FileUpload
-                        endpoint="serverImage"
+                        endpoint="messageFile"
                         onChange={field.onChange}
                         value={field.value}
                       />
@@ -122,7 +100,7 @@ export const ServerSettingsModal = () => {
                 className="font-bold"
                 disabled={isLoading}
               >
-                Save
+                Send
               </Button>
             </DialogFooter>
           </form>

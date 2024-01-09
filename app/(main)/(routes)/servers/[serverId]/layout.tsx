@@ -32,7 +32,7 @@ const ServerLayout = async ({
       <div className="fixed w-60 h-full dark:bg-[#101013] bg-zinc-200 md:hidden">
         <ServerSidebar serverId={params.serverId} />
       </div>
-      <div className="mdm:px-60">{children}</div>
+      <div className="mdm:px-60 h-screen">{children}</div>
     </div>
   );
 };
