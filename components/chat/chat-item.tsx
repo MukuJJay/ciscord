@@ -66,7 +66,7 @@ export const ChatItem = ({
   const isImage = !isPdf && fileUrl;
 
   return (
-    <div className="relative flex gap-4 px-4 py-4 group hover:bg-zinc-300/50 hover:dark:bg-zinc-950/50">
+    <div className="relative flex gap-4 px-8 py-4 group hover:bg-zinc-300/50 hover:dark:bg-zinc-950/50">
       <div>
         <Avatar>
           <AvatarImage src={member.profile.imageUrl} />
@@ -101,7 +101,7 @@ export const ChatItem = ({
           {!fileUrl && !isEditing && (
             <p
               className={cn(
-                "text-sm text-zinc-600 dark:text-zinc-300",
+                "text-sm text-zinc-600 dark:text-zinc-300 break-all",
                 deleted ? "italic text-xs text-zinc-400 dark:text-zinc-500" : ""
               )}
             >

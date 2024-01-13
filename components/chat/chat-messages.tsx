@@ -7,6 +7,7 @@ import { Loader2, ServerCrash } from "lucide-react";
 import { Fragment } from "react";
 import { ChatItem } from "./chat-item";
 import { useChatSocket } from "@/hooks/use-chat-socket";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ChatMessagesProps {
   name: string;
@@ -63,30 +64,32 @@ export const ChatMessages = ({
   }
 
   return (
-    <div className="flex-1 flex flex-col py-4 overflow-y-auto">
-      <div className="flex-1" />
-      <ChatWelcome name={name} type={type} />
-      <div className="flex flex-col-reverse">
-        {data?.pages.map((group, i) => (
-          <Fragment key={i}>
-            {group.items.map((message: messageWithMemberWithProfile) => (
-              <ChatItem
-                key={message.id}
-                id={message.id}
-                content={message.content}
-                currentMember={member}
-                member={message.member}
-                deleted={message.deleted}
-                createdAt={message.createdAt}
-                updatedAt={message.updatedAt}
-                fileUrl={message.fileUrl}
-                socketUrl={socketUrl}
-                socketQuery={socketQuery}
-              />
-            ))}
-          </Fragment>
-        ))}
+    <ScrollArea className="flex-1 relative">
+      <div className="flex flex-col gap-3 py-4 h-full">
+        <ChatWelcome name={name} type={type} />
+        <hr></hr>
+        <div className="flex flex-col-reverse">
+          {data?.pages.map((group, i) => (
+            <Fragment key={i}>
+              {group.items.map((message: messageWithMemberWithProfile) => (
+                <ChatItem
+                  key={message.id}
+                  id={message.id}
+                  content={message.content}
+                  currentMember={member}
+                  member={message.member}
+                  deleted={message.deleted}
+                  createdAt={message.createdAt}
+                  updatedAt={message.updatedAt}
+                  fileUrl={message.fileUrl}
+                  socketUrl={socketUrl}
+                  socketQuery={socketQuery}
+                />
+              ))}
+            </Fragment>
+          ))}
+        </div>
       </div>
-    </div>
+    </ScrollArea>
   );
 };
