@@ -94,13 +94,20 @@ export default async function handler(
         return res.status(401).json({ error: "Unauthorized!" });
       }
 
-      const UpdatedOrDeletedMessage = await db.message.update({
+      UpdatedOrDeletedMessage = await db.message.update({
         where: {
           id: message.id,
           memberId: member.id,
         },
         data: {
           content,
+        },
+        include: {
+          member: {
+            include: {
+              profile: true,
+            },
+          },
         },
       });
     }
@@ -120,7 +127,7 @@ export default async function handler(
         return res.status(404).json("Message not found!");
       }
 
-      const UpdatedOrDeletedMessage = await db.message.update({
+      UpdatedOrDeletedMessage = await db.message.update({
         where: {
           id: message.id,
         },
@@ -128,6 +135,13 @@ export default async function handler(
           fileUrl: null,
           content: "This message has been deleted!",
           deleted: true,
+        },
+        include: {
+          member: {
+            include: {
+              profile: true,
+            },
+          },
         },
       });
     }

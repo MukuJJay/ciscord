@@ -6,6 +6,7 @@ import { useChatQuery } from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
 import { Fragment } from "react";
 import { ChatItem } from "./chat-item";
+import { useChatSocket } from "@/hooks/use-chat-socket";
 
 interface ChatMessagesProps {
   name: string;
@@ -35,6 +36,10 @@ export const ChatMessages = ({
   socketQuery,
 }: ChatMessagesProps) => {
   const queryKey = `chat:${chatId}`;
+  const addKey = `chat:${chatId}:message`;
+  const updateKey = `chat:${chatId}:message:update`;
+
+  useChatSocket({ queryKey, addKey, updateKey });
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useChatQuery({ apiUrl, paramKey, paramValue, queryKey });
@@ -61,25 +66,27 @@ export const ChatMessages = ({
     <div className="flex-1 flex flex-col py-4 overflow-y-auto">
       <div className="flex-1" />
       <ChatWelcome name={name} type={type} />
-      {data?.pages.map((group, i) => (
-        <Fragment key={i}>
-          {group.items.map((message: messageWithMemberWithProfile) => (
-            <ChatItem
-              key={message.id}
-              id={message.id}
-              content={message.content}
-              currentMember={member}
-              member={message.member}
-              deleted={message.deleted}
-              createdAt={message.createdAt}
-              updatedAt={message.updatedAt}
-              fileUrl={message.fileUrl}
-              socketUrl={socketUrl}
-              socketQuery={socketQuery}
-            />
-          ))}
-        </Fragment>
-      ))}
+      <div className="flex flex-col-reverse">
+        {data?.pages.map((group, i) => (
+          <Fragment key={i}>
+            {group.items.map((message: messageWithMemberWithProfile) => (
+              <ChatItem
+                key={message.id}
+                id={message.id}
+                content={message.content}
+                currentMember={member}
+                member={message.member}
+                deleted={message.deleted}
+                createdAt={message.createdAt}
+                updatedAt={message.updatedAt}
+                fileUrl={message.fileUrl}
+                socketUrl={socketUrl}
+                socketQuery={socketQuery}
+              />
+            ))}
+          </Fragment>
+        ))}
+      </div>
     </div>
   );
 };
