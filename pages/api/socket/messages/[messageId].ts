@@ -1,6 +1,7 @@
 import { currentProfilePages } from "@/lib/current-profile-pages";
 import { db } from "@/lib/db";
 import { NextApiResponseServerIo } from "@/types";
+import { MemberRole, Message } from "@prisma/client";
 import { NextApiRequest } from "next";
 
 export default async function handler(
@@ -15,10 +16,6 @@ export default async function handler(
     const profile = await currentProfilePages(req);
     const { messageId, channelId, serverId } = req.query;
     const content = req.body.content;
-
-    if (!content) {
-      return res.status(400).json("Content not found!");
-    }
 
     if (!profile) {
       return res.status(401).json({ error: "Unauthorized!" });
@@ -73,6 +70,7 @@ export default async function handler(
       where: {
         id: messageId as string,
         channelId: channel.id,
+        deleted: false,
       },
     });
 
@@ -84,14 +82,19 @@ export default async function handler(
       (member) => member.profileId === profile.id
     );
 
+    let UpdatedOrDeletedMessage: Message = message;
+
     if (req.method === "PATCH") {
+      if (!content) {
+        return res.status(400).json("Content not found!");
+      }
       const isOwner = message.memberId === member?.id;
 
-      if (!isOwner) {
+      if (!isOwner || message.fileUrl) {
         return res.status(401).json({ error: "Unauthorized!" });
       }
 
-      const updatedMessage = await db.message.update({
+      const UpdatedOrDeletedMessage = await db.message.update({
         where: {
           id: message.id,
           memberId: member.id,
@@ -100,11 +103,39 @@ export default async function handler(
           content,
         },
       });
-
-      return res.status(200).json({ data: updatedMessage });
     }
 
-    // return res.json({ data: req.query });
+    if (req.method === "DELETE") {
+      const isAdmin = member?.role === MemberRole.ADMIN;
+      const isModerator = member?.role === MemberRole.MODERATOR;
+      const isOwner = message.memberId === member?.id;
+
+      const canDeleteMessage = isAdmin || isModerator || isOwner;
+
+      if (!canDeleteMessage) {
+        return res.status(401).json("Unauthorized!");
+      }
+
+      if (message.deleted) {
+        return res.status(404).json("Message not found!");
+      }
+
+      const UpdatedOrDeletedMessage = await db.message.update({
+        where: {
+          id: message.id,
+        },
+        data: {
+          fileUrl: null,
+          content: "This message has been deleted!",
+          deleted: true,
+        },
+      });
+    }
+
+    const updateKey = `chat:${channelId}:message:update`;
+    res?.socket?.server?.io?.emit(updateKey, UpdatedOrDeletedMessage);
+
+    return res.status(200).json({ data: UpdatedOrDeletedMessage });
   } catch (error) {
     console.error("[MESSAGES PATCH", error);
     res.status(500).json({ error });

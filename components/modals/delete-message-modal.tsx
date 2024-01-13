@@ -2,7 +2,6 @@
 
 import { useModal } from "@/hooks/user-modal-store";
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import qs from "query-string";
 
@@ -19,8 +18,7 @@ import { Button } from "@/components/ui/button";
 export const DeleteMessageModal = () => {
   const { type, data, isOpen, onClose } = useModal();
   const [isLoading, setIsLoading] = useState(false);
-  const { channel } = data;
-  const router = useRouter();
+  const { apiUrl, query } = data;
 
   const isModalOpen = isOpen && type === "deleteMessage";
 
@@ -28,14 +26,13 @@ export const DeleteMessageModal = () => {
     try {
       setIsLoading(true);
 
-      //   const url = qs.stringifyUrl({
-      //     url: `/api/channel/${channel?.id}`,
-      //     query: { serverId: params?.serverId },
-      //   });
+      const url = qs.stringifyUrl({
+        url: `${apiUrl}/${query?.messageId}`,
+        query,
+      });
 
-      //   await axios.delete(url);
+      await axios.delete(url);
 
-      router.refresh();
       onClose();
     } catch (error) {
       console.error("[DELETE SERVER]", error);
@@ -48,7 +45,7 @@ export const DeleteMessageModal = () => {
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center">Delete Message!</DialogTitle>
+          <DialogTitle className="text-center">Delete Message?!</DialogTitle>
         </DialogHeader>
         <DialogDescription className="text-center">
           Are you sure to delete? Message{" "}

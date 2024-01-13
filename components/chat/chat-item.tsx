@@ -52,6 +52,7 @@ export const ChatItem = ({
   deleted,
 }: ChatItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { onOpen } = useModal();
 
   const isAdmin = currentMember.role === MemberRole.ADMIN;
   const isModerator = currentMember.role === MemberRole.MODERATOR;
@@ -63,8 +64,6 @@ export const ChatItem = ({
   const fileType = fileUrl?.split(".").pop();
   const isPdf = fileType === "pdf" && fileUrl;
   const isImage = !isPdf && fileUrl;
-
-  const { isOpen } = useModal();
 
   return (
     <div className="relative flex gap-4 px-4 py-4 group hover:bg-zinc-300/50 hover:dark:bg-zinc-950/50">
@@ -89,7 +88,7 @@ export const ChatItem = ({
         </div>
 
         <div className={cn(fileUrl ? "mt-3" : "")}>
-          {!fileUrl && isEditing && (
+          {!fileUrl && isEditing && !deleted && (
             <ChatReply
               messageId={id}
               content={content}
@@ -100,10 +99,15 @@ export const ChatItem = ({
           )}
 
           {!fileUrl && !isEditing && (
-            <p className="text-sm text-zinc-600 dark:text-zinc-300">
+            <p
+              className={cn(
+                "text-sm text-zinc-600 dark:text-zinc-300",
+                deleted ? "italic text-xs text-zinc-400 dark:text-zinc-500" : ""
+              )}
+            >
               {content}{" "}
-              {isEdited && (
-                <span className="text-xs text-zinc-500 italic">(edited)</span>
+              {isEdited && !deleted && (
+                <span className="text-zinc-500 text-xs italic">(edited)</span>
               )}
             </p>
           )}
@@ -137,7 +141,7 @@ export const ChatItem = ({
         </div>
       </div>
 
-      {canDeleteMessage && (
+      {canDeleteMessage && !deleted && (
         <div className="hidden group-hover:flex items-center gap-1 absolute z-10 top-[-8px] right-10 dark:text-zinc-500 text-zinc-400 bg-zinc-50 dark:bg-zinc-950 rounded-sm">
           {canEditMessage && (
             <ActionTooltip label="edit" duration={400}>
@@ -150,7 +154,15 @@ export const ChatItem = ({
             </ActionTooltip>
           )}
           <ActionTooltip label="delete" duration={400}>
-            <div className="p-[6px] cursor-pointer hover:bg-zinc-300 hover:dark:bg-zinc-800 rounded-sm">
+            <div
+              className="p-[6px] cursor-pointer hover:bg-zinc-300 hover:dark:bg-zinc-800 rounded-sm"
+              onClick={() =>
+                onOpen("deleteMessage", {
+                  apiUrl: socketUrl,
+                  query: { ...socketQuery, messageId: id },
+                })
+              }
+            >
               <Trash2 className="w-4 h-4" />
             </div>
           </ActionTooltip>
