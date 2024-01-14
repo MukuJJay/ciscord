@@ -93,48 +93,45 @@ export const ChatMessages = ({
     <div
       ref={chatdivRef}
       onScroll={handleLoadMore}
-      className="flex flex-col-reverse gap-4 h-full overflow-y-auto"
+      className="flex flex-col-reverse gap-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-sm"
     >
-      <div className="flex flex-col">
-        {!hasNextPage && <ChatWelcome name={name} type={type} />}
-        {hasNextPage && isFetchingNextPage && (
-          <div className="p-4 flex justify-center items-center">
-            <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
-          </div>
-        )}
-        {hasNextPage && !isFetchingNextPage && (
-          <Button
-            variant={"ghost"}
-            onClick={() => fetchNextPage()}
-            className="text-zinc-500"
-          >
-            Load more messages
-          </Button>
-        )}
-        <div className="flex flex-col-reverse">
-          {data?.pages.map((group, i) => (
-            <Fragment key={i}>
-              {group.items.map((message: messageWithMemberWithProfile) => (
-                <ChatItem
-                  key={message.id}
-                  id={message.id}
-                  content={message.content}
-                  currentMember={member}
-                  member={message.member}
-                  deleted={message.deleted}
-                  createdAt={message.createdAt}
-                  updatedAt={message.updatedAt}
-                  fileUrl={message.fileUrl}
-                  socketUrl={socketUrl}
-                  socketQuery={socketQuery}
-                />
-              ))}
-            </Fragment>
-          ))}
-        </div>
-
-        <div ref={bottomdivRef} />
+      <div ref={bottomdivRef} />
+      <div className="flex flex-col-reverse">
+        {data?.pages.map((group, i) => (
+          <Fragment key={i}>
+            {group.items.map((message: messageWithMemberWithProfile) => (
+              <ChatItem
+                key={message.id}
+                id={message.id}
+                content={message.content}
+                currentMember={member}
+                member={message.member}
+                deleted={message.deleted}
+                createdAt={message.createdAt}
+                updatedAt={message.updatedAt}
+                fileUrl={message.fileUrl}
+                socketUrl={socketUrl}
+                socketQuery={socketQuery}
+              />
+            ))}
+          </Fragment>
+        ))}
       </div>
+      {!hasNextPage && <ChatWelcome name={name} type={type} />}
+      {hasNextPage && isFetchingNextPage && (
+        <div className="p-4 flex justify-center items-center">
+          <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+        </div>
+      )}
+      {hasNextPage && !isFetchingNextPage && (
+        <Button
+          variant={"ghost"}
+          onClick={() => fetchNextPage()}
+          className="text-zinc-500"
+        >
+          Load more messages
+        </Button>
+      )}
     </div>
   );
 };
