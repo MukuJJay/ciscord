@@ -4,10 +4,12 @@ import { Member, Message, Profile } from "@prisma/client";
 import { ChatWelcome } from "./chat-welcome";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
-import { Fragment } from "react";
+import { ElementRef, Fragment, useRef } from "react";
 import { ChatItem } from "./chat-item";
 import { useChatSocket } from "@/hooks/use-chat-socket";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { useChatScroll } from "@/hooks/use-chat-scroll";
 
 interface ChatMessagesProps {
   name: string;
@@ -45,6 +47,30 @@ export const ChatMessages = ({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useChatQuery({ apiUrl, paramKey, paramValue, queryKey });
 
+  const chatdivRef = useRef<ElementRef<"div">>(null);
+  const bottomdivRef = useRef<ElementRef<"div">>(null);
+  const count = data?.pages[0]?.items.length ?? 0;
+  useChatScroll({ chatdivRef, bottomdivRef, count });
+
+  const handleLoadMore = () => {
+    const chatdiv = chatdivRef?.current;
+    console.log(
+      chatdiv?.scrollTop,
+      chatdiv?.clientHeight,
+      chatdiv?.scrollHeight
+    );
+
+    if (!chatdiv) {
+      return;
+    }
+
+    if (
+      chatdiv?.scrollTop === -(chatdiv?.scrollHeight - chatdiv?.clientHeight)
+    ) {
+      fetchNextPage();
+    }
+  };
+
   if (status === "pending") {
     return (
       <div className="flex-1 flex justify-center items-center flex-col gap-1">
@@ -64,10 +90,27 @@ export const ChatMessages = ({
   }
 
   return (
-    <ScrollArea className="flex-1 relative">
-      <div className="flex flex-col gap-3 py-4 h-full">
-        <ChatWelcome name={name} type={type} />
-        <hr></hr>
+    <div
+      ref={chatdivRef}
+      onScroll={handleLoadMore}
+      className="flex flex-col-reverse gap-4 h-full overflow-y-auto"
+    >
+      <div className="flex flex-col">
+        {!hasNextPage && <ChatWelcome name={name} type={type} />}
+        {hasNextPage && isFetchingNextPage && (
+          <div className="p-4 flex justify-center items-center">
+            <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+          </div>
+        )}
+        {hasNextPage && !isFetchingNextPage && (
+          <Button
+            variant={"ghost"}
+            onClick={() => fetchNextPage()}
+            className="text-zinc-500"
+          >
+            Load more messages
+          </Button>
+        )}
         <div className="flex flex-col-reverse">
           {data?.pages.map((group, i) => (
             <Fragment key={i}>
@@ -89,7 +132,9 @@ export const ChatMessages = ({
             </Fragment>
           ))}
         </div>
+
+        <div ref={bottomdivRef} />
       </div>
-    </ScrollArea>
+    </div>
   );
 };

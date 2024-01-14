@@ -29,7 +29,7 @@ const NavigationServers = ({ id, name, imageUrl }: NavigationServerProps) => {
         <div
           className={cn(
             "w-[4px] rounded-md transition-all absolute left-[-9px] top-[50%] translate-y-[-50%] bg-zinc-900 dark:bg-zinc-300 h-[4px]",
-            params.serverId === id ? "h-[30px]" : "group-hover:h-[15px] "
+            params?.serverId === id ? "h-[30px]" : "group-hover:h-[15px] "
           )}
         ></div>
         <Image
@@ -37,7 +37,8 @@ const NavigationServers = ({ id, name, imageUrl }: NavigationServerProps) => {
           src={imageUrl}
           alt={name}
           className={cn(
-            params.serverId === id
+            "object-cover",
+            params?.serverId === id
               ? "rounded-[16px]"
               : "rounded-[24px] group-hover:rounded-[16px] transition-all"
           )}
