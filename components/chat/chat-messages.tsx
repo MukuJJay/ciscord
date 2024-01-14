@@ -54,11 +54,6 @@ export const ChatMessages = ({
 
   const handleLoadMore = () => {
     const chatdiv = chatdivRef?.current;
-    console.log(
-      chatdiv?.scrollTop,
-      chatdiv?.clientHeight,
-      chatdiv?.scrollHeight
-    );
 
     if (!chatdiv) {
       return;
