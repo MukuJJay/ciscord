@@ -74,6 +74,11 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
   }
 
   if (channel?.type === ChannelType.VIDEO) {
+    <ChatHeader
+      channelName={channel?.name}
+      serverId={serverId}
+      type="channel"
+    />;
     return <VideoRoom chatId="channel?.id" />;
   }
 };
