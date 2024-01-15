@@ -84,7 +84,6 @@ export const ChatInput = ({ name, apiUrl, query, type }: chatInputProps) => {
                         ? `Message ${name}`
                         : `Message # ${name}`
                     }
-                    autoFocus
                   />
                   <div className="absolute right-0 top-[50%] translate-y-[-50%]">
                     <EmojiPicker
