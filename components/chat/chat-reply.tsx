@@ -34,7 +34,7 @@ export const ChatReply = ({
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [setIsEditing]);
 
   const formSchema = z.object({
     content: z.string().min(1),

@@ -73,7 +73,7 @@ export const EditChannelModal = () => {
       form.setValue("name", channel.name);
       form.setValue("type", channel.type);
     }
-  }, [isOpen, form]);
+  }, [isOpen, form, channel]);
 
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -81,7 +81,7 @@ export const EditChannelModal = () => {
       const url = qs.stringifyUrl({
         url: `/api/channel/${channel?.id}`,
         query: {
-          serverId: params.serverId,
+          serverId: params?.serverId,
         },
       });
 

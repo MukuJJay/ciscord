@@ -31,7 +31,7 @@ export const VideoRoom = ({ chatId }: VideoRoomProps) => {
         console.log(e);
       }
     })();
-  }, [user?.firstName, user?.lastName, chatId]);
+  }, [user?.id, chatId]);
 
   if (token === "") {
     return (
