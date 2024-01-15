@@ -66,7 +66,7 @@ export const ChatItem = ({
   const isImage = !isPdf && fileUrl;
 
   return (
-    <div className="relative flex gap-4 px-8 py-4 group hover:bg-zinc-300/50 hover:dark:bg-zinc-950/50">
+    <div className="relative flex gap-4 px-8 sm:px-3 md:px-5 py-4 group hover:bg-zinc-300/50 hover:dark:bg-zinc-950/50">
       <div>
         <Avatar>
           <AvatarImage src={member.profile.imageUrl} />
@@ -115,7 +115,7 @@ export const ChatItem = ({
             <a
               href={fileUrl}
               target="_blank"
-              className="flex justify-center items-center relative aspect-square w-48 h-48 ml-4"
+              className="flex justify-center items-center relative aspect-square w-48 h-48 ml-4 bg-zinc-500 dark:bg-zinc-800 rounded-md"
             >
               <Image
                 src={fileUrl}

@@ -88,7 +88,7 @@ export const ChatMessages = ({
     <div
       ref={chatdivRef}
       onScroll={handleLoadMore}
-      className="flex flex-col-reverse gap-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-sm"
+      className="flex flex-col-reverse gap-4 h-full overflow-y-auto scrollbar scrollbar-w-1 scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-sm"
     >
       <div ref={bottomdivRef} />
       <div className="flex flex-col-reverse">
