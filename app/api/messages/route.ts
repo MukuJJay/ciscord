@@ -18,7 +18,7 @@ export async function GET(req: Request) {
     }
 
     if (!channelId) {
-      new NextResponse("Channel ID not found!", { status: 400 });
+      return new NextResponse("Channel ID not found!", { status: 400 });
     }
 
     let messages: Message[] = [];
@@ -72,6 +72,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ items: messages, nextCursor });
   } catch (error) {
     console.error("[MESSAGES GET ERROR]", error);
-    new NextResponse(`Internal server error${error}`, { status: 500 });
+    return new NextResponse(`Internal server error${error}`, { status: 500 });
   }
 }
