@@ -61,10 +61,14 @@ export const ServerSettingsModal = () => {
 
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await axios.patch(`/api/server/${server?.id}`, values);
-    form.reset();
-    router.refresh();
-    onClose();
+    try {
+      await axios.patch(`/api/server/${server?.id}`, values);
+      form.reset();
+      router.refresh();
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClose = () => {

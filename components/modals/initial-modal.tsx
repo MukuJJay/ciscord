@@ -52,9 +52,13 @@ export const InitialModal = () => {
 
   const isLoading = form.formState.isSubmitting;
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    axios.post("/api/server", values);
-    form.reset();
-    window.location.reload();
+    try {
+      axios.post("/api/server", values);
+      form.reset();
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!isMounted) {
