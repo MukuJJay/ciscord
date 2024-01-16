@@ -75,14 +75,14 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
 
   if (channel?.type === ChannelType.VIDEO) {
     return (
-      <>
+      <div className="h-full overflow-auto scrollbar scrollbar-w-1 scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-sm">
         <ChatHeader
           channelName={channel?.name}
           serverId={serverId}
           type="channel"
         />
-        <VideoRoom chatId="channel?.id" />;
-      </>
+        <VideoRoom chatId="channel?.id" />
+      </div>
     );
   }
 };
