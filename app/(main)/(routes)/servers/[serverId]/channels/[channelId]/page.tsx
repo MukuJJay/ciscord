@@ -1,6 +1,7 @@
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatInput } from "@/components/chat/chat-input";
 import { ChatMessages } from "@/components/chat/chat-messages";
+import { ChatNewInput } from "@/components/chat/chat-new-input";
 import { VideoRoom } from "@/components/room/video-room";
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
@@ -63,7 +64,13 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
           socketUrl="/api/socket/messages"
           socketQuery={{ channelId, serverId }}
         />
-        <ChatInput
+        {/* <ChatInput
+          name={channel?.name}
+          type="channel"
+          apiUrl="/api/socket/messages"
+          query={{ channelId, serverId }}
+        /> */}
+        <ChatNewInput
           name={channel?.name}
           type="channel"
           apiUrl="/api/socket/messages"

@@ -7,7 +7,7 @@ import axios from "axios";
 
 import { Form, FormField, FormControl, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { EmojiPicker } from "../emoji-picker";
+import { EmojiPicker } from "@/components/emoji-picker";
 
 interface ChatReplyProps {
   messageId: string;
@@ -83,13 +83,13 @@ export const ChatReply = ({
                     className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 py-5 pl-5 pr-10"
                     autoFocus
                   />
-                  <div className="absolute right-0 top-[50%] translate-y-[-50%]">
+                  {/* <div className="absolute right-0 top-[50%] translate-y-[-50%]">
                     <EmojiPicker
                       onChange={(emoji: string) =>
                         field.onChange(`${field.value}${emoji}`)
                       }
                     />
-                  </div>
+                  </div> */}
                 </div>
               </FormControl>
             </FormItem>
