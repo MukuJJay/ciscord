@@ -106,11 +106,6 @@ export const ChatNewInput = ({ name, apiUrl, query, type }: chatInputProps) => {
           }}
         />
       </div>
-      {isLoading && (
-        <div className="absolute right-[55px] top-[32%]">
-          <Loader2 className="w-7 h-7 animate-spin text-zinc-300 dark:text-zinc-500" />
-        </div>
-      )}
     </div>
   );
 };

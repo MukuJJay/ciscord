@@ -1,6 +1,7 @@
 import { Member, MemberRole, Profile } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Shield, ShieldCheck, ShieldPlus } from "lucide-react";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface ServerMemberProps {
   members: (Member & { profile: Profile })[];
@@ -20,7 +21,7 @@ export const ServerMembers = ({ members }: ServerMemberProps) => {
   const guests = members.filter((member) => member.role === MemberRole.GUEST);
 
   return (
-    <div className="w-60 h-full fixed right-0 top-0 z-10 dark:bg-[#101013] bg-zinc-200 md:hidden p-3 flex flex-col gap-8">
+    <div className="w-60 h-full fixed right-0 top-0 z-10 dark:bg-[#101013] bg-zinc-200 md:hidden p-3 flex flex-col gap-8 overflow-y-auto scrollbar scrollbar-w-1 scrollbar-thumb-zinc-700 scrollbar-thumb-rounded-sm">
       {admin && (
         <div className="flex flex-col gap-3">
           <p className="flex items-center gap-2 dark:text-zinc-400 font-semibold">
