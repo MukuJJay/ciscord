@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, Lock, Plus, Trash } from "lucide-react";
+import { Edit, Loader2, Lock, Plus, Trash } from "lucide-react";
 import { ActionTooltip } from "@/components/action-tooltip";
 
 import { Channel, ChannelType, MemberRole } from "@prisma/client";
@@ -8,6 +8,8 @@ import { Channel, ChannelType, MemberRole } from "@prisma/client";
 import { ModalType, useModal } from "@/hooks/user-modal-store";
 import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { isServerAndChannelLoading } from "@/contexts/server-channel-loading-context";
+import { useContext } from "react";
 
 interface ServerChannelProps {
   label: string;
@@ -27,6 +29,8 @@ export const ServerChannel = ({
   const { onOpen } = useModal();
   const router = useRouter();
   const params = useParams();
+
+  const channelLoader = useContext(isServerAndChannelLoading);
 
   const channelOnClick = (channelId: string) => {
     router.push(`/servers/${params?.serverId}/channels/${channelId}`);
@@ -65,7 +69,11 @@ export const ServerChannel = ({
             )}
             onClick={() => channelOnClick(channel?.id)}
           >
-            {icon}
+            {channelLoader?.isLoading?.channelId === channel.id ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              icon
+            )}
             <ActionTooltip label={channel.name} side="right" duration={700}>
               <span className="text-sm line-clamp-1">
                 {channel.name.slice(0, 17)}

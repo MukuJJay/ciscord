@@ -4,12 +4,13 @@ import { Member, Message, Profile } from "@prisma/client";
 import { ChatWelcome } from "./chat-welcome";
 import { useChatQuery } from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
-import { ElementRef, Fragment, useRef } from "react";
+import { ElementRef, Fragment, useContext, useEffect, useRef } from "react";
 import { ChatItem } from "./chat-item";
 import { useChatSocket } from "@/hooks/use-chat-socket";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { useChatScroll } from "@/hooks/use-chat-scroll";
+import { isServerAndChannelLoading } from "@/contexts/server-channel-loading-context";
 
 interface ChatMessagesProps {
   name: string;
@@ -51,6 +52,14 @@ export const ChatMessages = ({
   const bottomdivRef = useRef<ElementRef<"div">>(null);
   const count = data?.pages[0]?.items.length ?? 0;
   useChatScroll({ chatdivRef, bottomdivRef, count });
+
+  const contextLoader = useContext(isServerAndChannelLoading);
+
+  useEffect(() => {
+    if (status === "success") {
+      contextLoader?.setIsLoading({ serverId: "", channelId: "" });
+    }
+  }, [status]);
 
   const handleLoadMore = () => {
     const chatdiv = chatdivRef?.current;

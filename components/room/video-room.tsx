@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LiveKitRoom, VideoConference } from "@livekit/components-react";
 import "@livekit/components-styles";
 import { Channel } from "@prisma/client";
 import { useUser } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
+import { isServerAndChannelLoading } from "@/contexts/server-channel-loading-context";
 
 interface VideoRoomProps {
   chatId: string;
@@ -14,6 +15,7 @@ interface VideoRoomProps {
 export const VideoRoom = ({ chatId }: VideoRoomProps) => {
   const { user } = useUser();
   const [token, setToken] = useState("");
+  const channelLoaderContext = useContext(isServerAndChannelLoading);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -27,6 +29,7 @@ export const VideoRoom = ({ chatId }: VideoRoomProps) => {
         );
         const data = await resp.json();
         setToken(data.token);
+        channelLoaderContext?.setIsLoading({ serverId: "", channelId: "" });
       } catch (e) {
         console.log(e);
       }
