@@ -9,6 +9,7 @@ import { Loader2, Plus } from "lucide-react";
 import { useModal } from "@/hooks/user-modal-store";
 import { EmojiPicker } from "@/components/emoji-picker";
 import { cn } from "@/lib/utils";
+import { isDesktop } from "react-device-detect";
 
 interface chatInputProps {
   name: string;
@@ -95,7 +96,7 @@ export const ChatNewInput = ({ name, apiUrl, query, type }: chatInputProps) => {
         placeholder={
           type === "conversation" ? `Message ${name}` : `Message # ${name}`
         }
-        autoFocus
+        autoFocus={isDesktop ? true : false}
         readOnly={isLoading}
       />
       <div className="absolute right-[20px] top-[27%]">
